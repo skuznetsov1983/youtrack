@@ -1,13 +1,9 @@
 # YouTrack on Docker
 	
-[![](https://badge.imagelayers.io/uniplug/youtrack:latest.svg)](https://imagelayers.io/?images=uniplug/youtrack:latest 'Get your own badge on imagelayers.io')
-[![Docker Repository on Quay](https://quay.io/repository/uniplug/youtrack/status "Docker Repository on Quay")](https://quay.io/repository/uniplug/youtrack)
-
-
 This repository contains a Docker image of JetBrains [YouTrack](http://www.jetbrains.com/youtrack).
 
-* The Docker image is available at [uniplug/youtrack](https://registry.hub.docker.com/u/uniplug/youtrack)
-* The GitHub repository is available at [uniplug/docker-youtrack](https://github.com/uniplug/youtrack-docker)
+* The Docker image is available at [skuznetsov1983/youtrack](https://registry.hub.docker.com/u/skuznetsov1983/youtrack)
+* The GitHub repository is available at [skuznetsov1983/youtrack](https://github.com/skuznetsov1983/youtrack)
 
 ## Usage
 
