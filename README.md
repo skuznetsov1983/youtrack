@@ -10,7 +10,7 @@ This repository contains a Docker image of JetBrains [YouTrack](http://www.jetbr
 Create a named container 'youtrack'.
 
 ```bash
-docker create --name youtrack uniplug/youtrack
+docker create --name youtrack skuznetsov1983/youtrack
 ```
 
 Start the container.
@@ -23,7 +23,7 @@ YouTrack starts and listens on port 80 in the container.
 To map it to the host's port 80, use the following command to create and start the container instead:
 
 ```bash
-docker run -t --name youtrack -p 80:80 -t uniplug/youtrack
+docker run -t --name youtrack -p 80:80 -t skuznetsov1983/youtrack
 ```
 
 To access container logs
