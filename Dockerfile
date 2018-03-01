@@ -1,37 +1,26 @@
-FROM dzwicker/docker-ubuntu:latest
+FROM java:8-jre
 MAINTAINER skuznetsov@logstream.ru
 
-# add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
-RUN \
-    mkdir -p /var/lib/youtrack && \
-    groupadd --gid 2000 youtrack && \
-    useradd --system -d /var/lib/youtrack --uid 2000 --gid youtrack youtrack && \
-    chown -R youtrack:youtrack /var/lib/youtrack
+RUN mkdir -p /opt/youtrack/data /opt/youtrack/backup /opt/youtrack/bin
 
-######### Install hub ###################
-COPY entry-point.sh /entry-point.sh
+WORKDIR /opt/youtrack
 
-RUN \
-    apt-get update && \
-    apt-get install -y curl && \
-    export YOUTRACK_VERSION=2018.1 && \
-    export YOUTRACK_BUILD=39916 && \
-    mkdir -p /usr/local && \
-    mkdir -p /var/lib/youtrack && \
-    cd /usr/local && \
-    echo "$YOUTRACK_VERSION" > version.docker.image && \
-    curl -L https://download-cf.jetbrains.com/charisma/youtrack-${YOUTRACK_VERSION}.${YOUTRACK_BUILD}.zip > youtrack.zip && \
-    unzip youtrack.zip && \
-    mv /usr/local/youtrack-${YOUTRACK_VERSION}.${YOUTRACK_BUILD} /usr/local/youtrack && \
-    rm -f youtrack.zip && \
-    rm -rf /usr/local/youtrack/internal/java/linux-x64/man && \
-    rm -rf /usr/local/youtrack/internal/java/mac-x64 && \
-    rm -rf /usr/local/youtrack/internal/java/windows-amd64 && \
-    chown -R youtrack:youtrack /usr/local/youtrack && \
-    chmod -R u+rwxX /usr/local/youtrack/internal/java/linux-x64
+ENV YOUTRACK_VERSION 2018.1.39916
 
-USER youtrack
-ENV HOME=/var/lib/youtrack
-EXPOSE 8080
-ENTRYPOINT ["/entry-point.sh"]
-CMD ["run"]
+RUN apt-get update && \
+    apt-get install -y supervisor && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN wget \
+ https://download.jetbrains.com/charisma/youtrack-${YOUTRACK_VERSION}.jar \
+ -O /opt/youtrack/bin/youtrack.jar
+
+#ADD youtrack.jar /opt/youtrack/bin/
+
+ADD supervisor/youtrack.conf /etc/supervisor/conf.d/youtrack.conf
+
+EXPOSE 80/tcp
+
+VOLUME ["/opt/youtrack/data/", "/opt/youtrack/backup/"]
+
+CMD ["/usr/bin/supervisord","-n","-c","/etc/supervisor/supervisord.conf"]
